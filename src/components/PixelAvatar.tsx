@@ -1,0 +1,4 @@
+type PixelAvatarProps={defaultImage:string;hoverImage:string;alt:string;size?:number};
+const columns=10;
+const tiles=Array.from({length:columns*columns},(_,index)=>{const x=index%columns;const y=Math.floor(index/columns);return {index,x,y,rank:(index*47+13)%101}}).sort((a,b)=>a.rank-b.rank);
+export function PixelAvatar({defaultImage,hoverImage,alt,size=150}:PixelAvatarProps){return <div className="pixel-avatar" style={{"--avatar-size":size+"px"} as React.CSSProperties}><img className="pixel-real" src={hoverImage} alt={alt}/><div className="pixel-tiles" aria-hidden="true">{tiles.map((tile,order)=><span key={tile.index} className="pixel-tile" style={{"--tile-x":(tile.x/(columns-1))*100+"%","--tile-y":(tile.y/(columns-1))*100+"%","--tile-delay":order*3+"ms","--tile-index":order} as React.CSSProperties}/>)}</div><img className="pixel-default" src={defaultImage} alt=""/></div>}

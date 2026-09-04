@@ -1,0 +1,4 @@
+import { PageIntro } from "@/components/layout/PageIntro";
+import { certifications } from "@/data/certifications";
+export const metadata = { title: "Certificações — KODA", description: "Certificações, cursos e formações complementares." };
+export default function CertificationsPage(){return <main className="inner-page shell"><PageIntro label="Certificações" title="Certificações" description="Certificações, cursos e formações complementares."/>{certifications.length===0?<div className="empty-state"><span>Em breve</span><p>Certificações serão adicionadas em breve.</p></div>:<section className="certifications-list">{certifications.map(item=><article className="certification-row" key={item.id}><span>{item.date||"—"}</span><div><h2>{item.title}</h2><p>{item.issuer}</p>{item.credentialId&&<small>{item.credentialId}</small>}</div></article>)}</section>}</main>}

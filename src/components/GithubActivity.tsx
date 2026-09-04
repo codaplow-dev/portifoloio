@@ -1,0 +1,10 @@
+import { profile } from "@/data/profile";
+import type { Contribution } from "@/lib/github";
+import { ContributionGraph } from "@/components/github/ContributionGraph";
+
+export function GithubActivity({ contributions, error = false }: { contributions?: Contribution[]; error?: boolean }) {
+  return <section className="section shell github-activity" data-reveal>
+    <div className="section-label"><span>GitHub Activity</span></div>
+    {contributions && contributions.length > 0 ? <ContributionGraph contributions={contributions} /> : <div className="github-activity-row"><p>{error ? "Não foi possível carregar a atividade do GitHub agora." : "Contribuições públicas podem ser acompanhadas diretamente no perfil."}</p><a className="inline-link" href={profile.github} target="_blank" rel="noopener noreferrer">{error ? "Ver perfil no GitHub" : "Ver atividade no GitHub"} <span>→</span></a></div>}
+  </section>;
+}

@@ -1,0 +1,3 @@
+import Link from "next/link";
+import {profile,socialLinks} from "@/data/site";
+export function Footer(){return <footer className="footer shell"><div><strong>{profile.brand}</strong><span>{profile.name}<br/>Software Developer</span><span>© 2026</span></div><div className="footer-links">{socialLinks.map(link=><a key={link.label} href={link.href} target={link.external?"_blank":undefined} rel={link.external?"noopener noreferrer":undefined}>{link.label}</a>)}<Link href="#top">Voltar ao topo ↑</Link></div></footer>}

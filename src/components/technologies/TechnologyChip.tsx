@@ -1,0 +1,3 @@
+import type { TechnologyItem } from "@/data/technologies";
+import { technologyIconMap } from "@/lib/technology-icons";
+export function TechnologyChip({ item }: { item: TechnologyItem }) { const Icon = technologyIconMap[item.iconKey] ?? technologyIconMap.api; if (!technologyIconMap[item.iconKey] && process.env.NODE_ENV !== "production") console.warn("Missing technology icon:", item.iconKey); const content = <><Icon className="tech-chip-icon" aria-hidden="true" focusable="false"/><span>{item.name}</span></>; return item.href ? <a className="tech-chip" href={item.href}>{content}</a> : <span className="tech-chip">{content}</span>; }

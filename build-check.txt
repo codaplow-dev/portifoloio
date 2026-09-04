@@ -1,0 +1,36 @@
+
+> kawa-portfolio@1.0.0 build
+> next build
+
+▲ Next.js 16.3.4 (Turbopack)
+✓ Running next.config.mjs took 24ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 455ms
+  Running TypeScript ...
+  Finished TypeScript in 3.8s ...
+  Collecting page data using 9 workers ...
+  Generating static pages using 9 workers (0/12) ...
+  Generating static pages using 9 workers (3/12) 
+  Generating static pages using 9 workers (6/12) 
+  Generating static pages using 9 workers (9/12) 
+✓ Generating static pages using 9 workers (12/12) in 3.5s
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ○ /about
+├ ○ /events
+├ ○ /experience
+├ ○ /projects
+└   /projects/[slug]
+  ├ ● /projects/burgerflow
+  ├ ● /projects/los-bravos
+  ├ ● /projects/cachorrao-express
+  └ ● [+2 more paths]
+
+
+○  (Static)  prerendered as static content
+●  (SSG)     prerendered as static HTML (uses generateStaticParams)
+

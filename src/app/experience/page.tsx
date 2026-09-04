@@ -1,0 +1,5 @@
+import type {Metadata} from "next";
+import {experience} from "@/data/experience";
+import {PageIntro} from "@/components/layout/PageIntro";
+export const metadata:Metadata={title:"Experiência — KODA",description:"Experiências profissionais e o que desenvolvi em cada uma."};
+export default function ExperiencePage(){return <main className="inner-page shell"><PageIntro label="02 / Experiência" title="Experiência" description="Experiências profissionais e o que desenvolvi em cada uma."/><section className="experience-timeline">{experience.map(item=><article className="timeline-item" key={item.id}><div className="timeline-dot"/><span className="timeline-period">{item.period}</span><div><h2>{item.role}</h2><p className="company">{item.company}</p>{item.location&&<p className="muted">{item.location}</p>}<div className="timeline-description">{item.description?.map(text=><p key={text}>{text}</p>)}</div></div></article>)}</section></main>}

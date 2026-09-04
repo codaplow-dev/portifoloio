@@ -1,0 +1,3 @@
+"use client";
+import {useEffect} from "react";
+export function MotionLayer(){useEffect(()=>{const reduce=window.matchMedia("(prefers-reduced-motion: reduce)").matches;const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting)entry.target.classList.add("is-visible")}),{threshold:.12});document.querySelectorAll("[data-reveal]").forEach(element=>observer.observe(element));if(reduce)return()=>observer.disconnect();return()=>observer.disconnect()},[]);return null}

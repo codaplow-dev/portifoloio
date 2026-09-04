@@ -1,0 +1,3 @@
+export type Experience={id:string;period:string;role:string;company:string;location?:string;description?:string[]};
+export const experience:Experience[]=[{id:"agape-support",period:"2026 — Atual",role:"Técnico de Sustentação",company:"Ágape Consultoria",description:["Sustentação de sistemas, atendimento técnico, investigação de erros e suporte a usuários.","Análise de processos e configuração e administração funcional de sistemas."]}];
+export const education=[{period:"",title:"Ciência da Computação",place:"Estácio"}];

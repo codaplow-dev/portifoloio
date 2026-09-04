@@ -1,4 +1,4 @@
-export type Project = { slug:string; title:string; category:string; description:string; tags:string[]; tone:"blue"|"yellow"|"red"|"green"|"ink"; featured?:boolean };
+export type Project = { slug:string; title:string; category:string; description:string; tags:string[]; tone:"blue"|"yellow"|"red"|"green"|"ink"; featured?:boolean; image?:string; imageAlt?:string; imagePosition?:string };
 export const projects:Project[]=[
  {slug:"burgerflow",title:"BurgerFlow",category:"SaaS · Gestão de restaurantes",description:"Uma operação inteira de delivery em um só lugar — do cardápio ao painel administrativo.",tags:["Next.js","TypeScript","Supabase"],tone:"blue",featured:true},
  {slug:"los-bravos",title:"Los Bravos",category:"Experiência digital · Barbearia",description:"Marca, serviços e agendamento com atitude própria.",tags:["Web design","Frontend"],tone:"yellow"},

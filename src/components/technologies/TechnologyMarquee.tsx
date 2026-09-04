@@ -11,7 +11,7 @@ type TechnologyMarqueeProps = {
 
 export function TechnologyMarquee({ items, reverse = false }: TechnologyMarqueeProps) {
   const viewportRef = useRef<HTMLDivElement>(null);
-  const groupRef = useRef<HTMLDivElement>(null);
+  const measureRef = useRef<HTMLDivElement>(null);
   const [repeatCount, setRepeatCount] = useState(1);
   const [groupWidth, setGroupWidth] = useState(0);
   const repeatedItems = useMemo(() => Array.from({ length: repeatCount }, () => items).flat(), [items, repeatCount]);
@@ -19,7 +19,7 @@ export function TechnologyMarquee({ items, reverse = false }: TechnologyMarqueeP
 
   useEffect(() => {
     const viewport = viewportRef.current;
-    const group = groupRef.current;
+    const group = measureRef.current;
     if (!viewport || !group || items.length === 0) return;
 
     const measure = () => {
@@ -43,10 +43,16 @@ export function TechnologyMarquee({ items, reverse = false }: TechnologyMarqueeP
   } as React.CSSProperties;
 
   return <div ref={viewportRef} className={`technology-marquee-viewport${groupWidth > 0 ? " is-ready" : ""}`} aria-label="Tecnologias utilizadas">
+    <div ref={measureRef} className="technology-marquee-measure" aria-hidden="true">
+      {items.map(item => <TechnologyChip item={item} key={`measure-${item.id}`} />)}
+    </div>
     <div className={`technology-marquee-track${reverse ? " is-reverse" : ""}`} style={trackStyle}>
-      {copies.map(copy => <div className="technology-marquee-group" aria-hidden={copy > 0} key={copy} ref={copy === 0 ? groupRef : undefined}>
+      {copies.map(copy => <div className="technology-marquee-group" aria-hidden={copy > 0} key={copy}>
         {repeatedItems.map((item, index) => <TechnologyChip item={item} key={`${copy}-${item.id}-${index}`} />)}
       </div>)}
     </div>
   </div>;
 }
+
+
+

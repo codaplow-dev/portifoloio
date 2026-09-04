@@ -1,36 +1,24 @@
-export type Contribution = {
-  date: string;
-  count: number;
-  level: 0 | 1 | 2 | 3 | 4;
-};
+import "server-only";
 
-type GitHubContributionsResponse = {
-  contributions?: unknown;
-};
+export type Contribution = { date: string; count: number; level: 0 | 1 | 2 | 3 | 4 };
+export type GitHubActivity = { contributions: Contribution[]; total: number; updatedAt: string };
 
-const endpoint = "https://github-contributions-api.jogruber.de/v4/codaplow-dev?y=last";
+type GitHubResponse = { data?: { user?: { contributionsCollection?: { contributionCalendar?: { totalContributions: number; weeks: Array<{ contributionDays: Array<{ date: string; contributionCount: number; contributionLevel: string }> }> } } } }; errors?: Array<{ message?: string }> };
+const levelMap: Record<string, Contribution["level"]> = { NONE: 0, FIRST_QUARTILE: 1, SECOND_QUARTILE: 2, THIRD_QUARTILE: 3, FOURTH_QUARTILE: 4 };
+const query = `query Contributions($login: String!, $from: DateTime!, $to: DateTime!) { user(login: $login) { contributionsCollection(from: $from, to: $to) { contributionCalendar { totalContributions weeks { contributionDays { date contributionCount contributionLevel } } } } } }`;
+const isLevel = (value: string): value is keyof typeof levelMap => value in levelMap;
 
-function isContribution(value: unknown): value is Contribution {
-  if (!value || typeof value !== "object") return false;
-  const item = value as Record<string, unknown>;
-  return typeof item.date === "string"
-    && typeof item.count === "number"
-    && Number.isFinite(item.count)
-    && Number.isInteger(item.count)
-    && typeof item.level === "number"
-    && Number.isInteger(item.level)
-    && item.level >= 0
-    && item.level <= 4;
+export async function getGitHubActivity(): Promise<GitHubActivity> {
+  const token = process.env.GITHUB_TOKEN;
+  if (!token) throw new Error("GITHUB_TOKEN is not configured");
+  const response = await fetch("https://api.github.com/graphql", { method: "POST", headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify({ query, variables: { login: "codaplow-dev", from: `${new Date().getFullYear()}-01-01T00:00:00Z`, to: new Date().toISOString() } }), cache: "no-store" });
+  if (!response.ok) throw new Error(`GitHub GraphQL request failed: ${response.status}`);
+  const payload = (await response.json()) as GitHubResponse;
+  if (payload.errors?.length) throw new Error(payload.errors[0].message ?? "GitHub GraphQL request failed");
+  const calendar = payload.data?.user?.contributionsCollection?.contributionCalendar;
+  if (!calendar) throw new Error("GitHub contribution calendar was not returned");
+  const contributions = calendar.weeks.flatMap(week => week.contributionDays.map(day => ({ date: day.date, count: day.contributionCount, level: isLevel(day.contributionLevel) ? levelMap[day.contributionLevel] : 0 })));
+  return { contributions, total: calendar.totalContributions, updatedAt: new Date().toISOString() };
 }
 
-export async function getGitHubContributions(): Promise<Contribution[]> {
-  const response = await fetch(endpoint, { next: { revalidate: 3600 } });
-  if (!response.ok) throw new Error(`GitHub contributions request failed: ${response.status}`);
-
-  const data = (await response.json()) as GitHubContributionsResponse;
-  if (!Array.isArray(data.contributions) || !data.contributions.every(isContribution)) {
-    throw new Error("GitHub contributions response has invalid shape");
-  }
-
-  return data.contributions;
-}
+export async function getGitHubContributions(): Promise<Contribution[]> { return (await getGitHubActivity()).contributions; }

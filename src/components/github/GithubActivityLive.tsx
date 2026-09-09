@@ -4,9 +4,9 @@ import { useEffect, useRef, useState } from "react";
 import type { Contribution, GitHubActivity } from "@/lib/github";
 import { ContributionGraph } from "@/components/github/ContributionGraph";
 
-type GithubActivityLiveProps = { initialContributions?: Contribution[]; initialError?: boolean; profileUrl: string };
+type GithubActivityLiveProps = { initialContributions?: Contribution[]; initialError?: boolean; profileUrl: string; githubUsername: string };
 
-export function GithubActivityLive({ initialContributions = [], initialError = false, profileUrl }: GithubActivityLiveProps) {
+export function GithubActivityLive({ initialContributions = [], initialError = false, profileUrl, githubUsername }: GithubActivityLiveProps) {
   const hasInitialData = initialContributions.length > 0;
   const [activity, setActivity] = useState<GitHubActivity | null>(hasInitialData ? { contributions: initialContributions, total: initialContributions.reduce((sum, item) => sum + item.count, 0), updatedAt: "" } : null);
   const [isLoading, setIsLoading] = useState(!hasInitialData);
@@ -40,6 +40,7 @@ export function GithubActivityLive({ initialContributions = [], initialError = f
 
   if (activity?.contributions.length) return <ContributionGraph contributions={activity.contributions} total={activity.total} />;
   if (isLoading) return <div className="github-activity-row"><p>Carregando atividade do GitHub...</p></div>;
-  return <div className="github-activity-row"><p>{hasError ? "Não foi possível carregar a atividade do GitHub agora." : "Contribuições públicas podem ser acompanhadas diretamente no perfil."}</p><a className="inline-link" href={profileUrl} target="_blank" rel="noopener noreferrer">{hasError ? "Ver perfil no GitHub" : "Ver atividade no GitHub"} <span>→</span></a></div>;
+  if (hasError) return <div className="github-activity-row"><p>Não foi possível carregar o painel do GitHub agora.</p><a className="inline-link" href={profileUrl} target="_blank" rel="noopener noreferrer">Ver perfil no GitHub <span>→</span></a></div>;
+  return <div className="github-activity-row"><p>Contribuições públicas podem ser acompanhadas diretamente no perfil.</p><a className="inline-link" href={profileUrl} target="_blank" rel="noopener noreferrer">Ver atividade no GitHub <span>→</span></a></div>;
 }
 
